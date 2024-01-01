@@ -1,16 +1,37 @@
 import pygame
 import sys
+import random
 
 pygame.init()
 
 start_time = int(pygame.time.get_ticks()/1000)
 
+def obstacle_movement(obstacle_list):
+    if obstacle_list:
+        for obstacle_rect in obstacle_list:
+            obstacle_rect.x -= 5
+            if obstacle_rect.bottom == 300:
+                screen.blit(car_surf_resized, obstacle_rect)
+            else:
+                screen.blit(bird_resized, obstacle_rect)
+        obstacle_list = [obstacle for obstacle in obstacle_list if obstacle.x > -100]
+        return obstacle_list
+    else:
+        return []
+
+def collision(player, obstacles):
+    if obstacles:
+        for obstacle_rect in obstacles:
+            if player_rect.colliderect(obstacle_rect): return False 
+    return True 
+
 def display_score():
-    global current_time
-    current_time = int(pygame.time.get_ticks()/1000) - start_time
+    if game_active:
+        global current_time
+        current_time = int(pygame.time.get_ticks()/1000) - start_time
     return current_time
 
-fps = 30
+fps = 60
 
 rose = (225, 29, 72) 
 dodger_blue = '#9ecfff'
@@ -44,6 +65,14 @@ car_surf_resized = pygame.transform.scale(car_surf, (60, 30))
 car_rect = car_surf_resized.get_rect(midbottom = (50, 300))
 car_rect.right = 600
 
+bird_surf = pygame.image.load("graphics/bird/bird_flying1.png")
+bird_resized = pygame.transform.scale(bird_surf, (40, 30))
+bird_rect = bird_resized.get_rect(midright = (600, 130))
+
+
+
+obstacle_rect_list = []
+
 player_surf = pygame.image.load("graphics/Player/player_walk_1.png").convert_alpha()
 player_rect = player_surf.get_rect(midbottom = (90, 300))
 player_gravity = 0
@@ -59,10 +88,13 @@ player_stand_rect2 = player_stand_resized2.get_rect(midright = (829, 356))
 
 instruction = pygame.font.Font("font/Pixeltype.ttf", 50)
 instruction_render = instruction.render("Press Space to play again!", False, (64, 64, 64))
-instruction_rect = instruction_render.get_rect(midtop = (400, 350))
+instruction_rect = instruction_render.get_rect(midtop = (400, 330))
 
 score = 0
+end_score = 0
 
+obstacle_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(obstacle_timer, 1500)
 
 game_active = True
 
@@ -88,67 +120,57 @@ while True:
                 car_rect.x = 800
                 score = 0
                 start_time = int(pygame.time.get_ticks()/1000)
+        if game_active and event.type == obstacle_timer:
+            if random.randint(0,2):
+                obstacle_rect_list.append(car_surf_resized.get_rect(midbottom = (random.randint(900,1100), 300)))
+            else:     
+                obstacle_rect_list.append(bird_resized.get_rect(midbottom = (random.randint(900,1100), 130)))
+
                 
-                
-           
-       # if event.type == pygame.MOUSEBUTTONUP:
-       #     print("Mouse button up")
-       # if event.type == pygame.MOUSEBUTTONDOWN:
-       #     print("Mouse button down")
-       # if event.type == pygame.MOUSEMOTION:
-       #     if player_rect.collidepoint(event.pos): print("Collision")
-      
     screen.blit(sky_surf_resized, sky_rect)
     screen.blit(ground_resized, ground_rect)
     screen.blit(game_header_surf_render, game_header_rect)
         
-    #pygame.draw.line(screen, "Gold", (0,0), pygame.mouse.get_pos(), width = 10)
-    #pygame.draw.rect(screen, sky_grey_c, game_header_rect, width = 0, border_radius=10)
-
-    
+       
     if game_active:
         score = display_score()
-        score_text = pygame.font.Font("font/Pixeltype.ttf", 40)
-        score_text_render = score_text.render(f"Score: {score}", False, "Black")
-        score_text_rect = score_text_render.get_rect(midright = (760, 50))
-        screen.blit(score_text_render, score_text_rect)
+        game_score_font = pygame.font.Font("font/Pixeltype.ttf", 40)
+        game_score_text = game_score_font.render(f"Score: {score}", False, "Black")
+        game_score_rect = game_score_text.get_rect(midright = (760, 50))
+        screen.blit(game_score_text, game_score_rect)
        
         player_gravity += 1
         player_rect.y += player_gravity
         if player_rect.bottom > 300: player_rect.bottom = 300 
         screen.blit(player_surf, player_rect)
 
-        car_rect.x -= 5
+        obstacle_rect_list = obstacle_movement(obstacle_rect_list)
+
+        car_rect.x -= 6
         if car_rect.right < 0: car_rect.left = 800
-        screen.blit(car_surf_resized, car_rect)
+        
+        game_active = collision(player_rect, obstacle_rect_list) 
+        
 
-        if player_rect.colliderect(car_rect):
-            game_active = False
-            score = 0
-
-        #    if player_rect.collidepoint(mouse_pos):
-    #       print(pygame.mouse.get_pressed())
         
-        #if player_rect.collidepoint(mouse_pos):
-        #    if pygame.mouse.get_pressed() == (True, False, False):
-        #        player_gravity = -20
-             
-        
-        
-        #key = pygame.key.get_pressed() 
-        #if key[pygame.K_SPACE]:
-        #    print("Jump")
     else:
         screen.fill(dodger_blue)
         screen.blit(player_stand_resized2, player_stand_rect2)
         screen.blit(instruction_render, instruction_rect)
         screen.blit(player_stand_resized, player_stand_rect)
         screen.blit(game_footer_render, game_footer_rect)
+        end_score_font = pygame.font.Font("font/Pixeltype.ttf", 36,)
+        end_score_render = end_score_font.render(f"Your Score: {end_score}", False, (64, 64, 64))
+        end_score_rect = end_score_render.get_rect(midtop = (400, 300))
+        screen.blit(end_score_render, end_score_rect)
+        end_score = display_score()
 
-        
+        player_rect.midbottom = (90, 300)
+        player_gravity = 0
+
+        obstacle_rect_list.clear()
     pygame.display.update()
     clock.tick(fps)
-
 
 
 
