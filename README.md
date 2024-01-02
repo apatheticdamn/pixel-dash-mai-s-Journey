@@ -6,7 +6,7 @@ Prerequisites
 
 Before you begin, ensure that you have Python and pip installed on your computer.<br>
 
-Installation <bir>
+Installation, <br>
 Clone this repository or Download the zip file and extract it.
 Open your terminal or command prompt.
 Navigate to the project directory.
