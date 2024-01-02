@@ -19,12 +19,9 @@ Install pygame using pip.
 pip install pygame
 ```
 
-Running the Game
-
-Once you have installed pygame, follow these steps to run the game:
-
-Open your preferred code editor.
-
+Running the Game, <br>
+Once you have installed pygame, follow these steps to run the game:<br>
+Open your preferred code editor.<br>
 Navigate to the project directory and open the main game file (e.g., game.py) in your code editor.
 
 Run the game by executing the script.
@@ -33,7 +30,9 @@ python game.py
 ```
 
 Enjoy playing Pixel Dash:  Mai's Journey!
-Additional Notes
+
+<br>
+## Additional Notes
 
 Make sure to explore the game settings and controls within the game window.
 If you encounter any issues or have suggestions, feel free to open an issue in the GitHub repository.
