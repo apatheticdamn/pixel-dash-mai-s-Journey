@@ -4,9 +4,10 @@ Project Name: **Pixel Dash:  Mai's Journey** 🕹️
 Welcome to Pixel Dash:  Mai's Journey 🎮! This repository contains the source code and assets for my exciting game. Follow the instructions below to install the required dependencies, run the game, and start playing.
 Prerequisites
 
-Before you begin, ensure that you have Python and pip installed on your computer.
-Installation
+Before you begin, ensure that you have Python and pip installed on your computer.<br>
 
+Installation
+Clone this repository or Download the zip file and extract it
 Open your terminal or command prompt.
 Navigate to the project directory.
 ```bash
