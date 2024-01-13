@@ -33,7 +33,6 @@ Enjoy playing Pixel Dash:  Mai's Journey!
 
 <br>
 Additional Notes, <br>
-Make sure to explore the game settings and controls within the game window.
 If you encounter any issues or have suggestions, feel free to open an issue in the GitHub repository.
 
 Thank you for trying out Pixel Dash:  Mai's Journey! Have fun and happy gaming!
